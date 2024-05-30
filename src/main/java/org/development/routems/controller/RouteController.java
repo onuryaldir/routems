@@ -40,4 +40,14 @@ public class RouteController {
                                                         updateRouteStatusRequest) {
         return routeService.updateRouteStatus(updateRouteStatusRequest.getId(),updateRouteStatusRequest.getStatus());
     }
+
+    @GetMapping("/heartbeat")
+    public ResponseEntity heartbeat() {
+        // Handle the request (e.g., retrieve data based on customerId and status)
+        // For this example, we'll just return a simple response
+
+        return ResponseEntity.ok("hello");
+    }
+
+
 }
