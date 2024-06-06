@@ -6,6 +6,7 @@ import lombok.Data;
 import org.hibernate.annotations.Type;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class RouteEntity {
     private String status;
 
     @Column(name = "created_at", nullable = false)
-    private Timestamp createdAt;
+    private Date createdAt;
 
     @Type(JsonBinaryType.class)
     @Column(name = "route", columnDefinition = "jsonb", nullable = false)

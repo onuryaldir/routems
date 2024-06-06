@@ -5,9 +5,8 @@ import lombok.Data;
 @Data
 public class RouteDetail {
 
-    private String latitude;
-
-    private String longitude;
-
-    private String name;
+    private double lat;
+    private String locationCode;
+    private String locationName;
+    private double longitude;
 }

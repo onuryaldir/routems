@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.development.routems.model.CreateRouteRequest;
 import org.development.routems.model.RouteResponse;
+import org.development.routems.model.TrainModelRequest;
 import org.development.routems.model.UpdateRouteStatusRequest;
 import org.development.routems.service.RouteService;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,11 @@ public class RouteController {
     private final RouteService routeService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createRoute(@RequestBody @Valid final CreateRouteRequest createRouteRequest) {
+    public void createRoute(@RequestBody @Valid final CreateRouteRequest createRouteRequest) {
         // Handle the request (e.g., save to database, process the data, etc.)
         // For this example, we'll just return a simple response
 
-        String responseMessage = "Route created for customer ID: " + createRouteRequest.getCustomerId()
-                + " with selected letters: " + createRouteRequest.getSelectedLetters();
-        return ResponseEntity.ok(responseMessage);
+        routeService.createRoute(createRouteRequest);
     }
 
     @GetMapping("/get")
@@ -48,6 +47,14 @@ public class RouteController {
 
         return ResponseEntity.ok("hello");
     }
+    @PostMapping("/train")
+    public ResponseEntity trainModel(@RequestBody @Valid final TrainModelRequest trainModelRequest) {
+        // Handle the request (e.g., save to database, process the data, etc.)
+        // For this example, we'll just return a simple response
+
+        return routeService.trainModel(trainModelRequest);
+    }
+
 
 
 }

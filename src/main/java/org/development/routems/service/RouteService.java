@@ -2,15 +2,25 @@ package org.development.routems.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.development.routems.configuration.AIServiceConfig;
+import org.development.routems.entity.RouteDetail;
 import org.development.routems.entity.RouteEntity;
 import org.development.routems.model.CreateRouteRequest;
+import org.development.routems.model.Route;
 import org.development.routems.model.RouteResponse;
+import org.development.routems.model.TrainModelRequest;
 import org.development.routems.repository.RouteRepository;
 import org.development.routems.statics.RequestStatus;
 import org.development.routems.statics.Status;
 import org.development.routems.util.RouteMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.RouteMatcher;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,18 +28,32 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RouteService {
 
-    private final RouteMapper routeMapper;
     private final RouteRepository routeRepository;
+    private final AiRequestService aiRequestService;
 
     public RouteResponse getActiveRoute(final Integer customerId){
 
         RouteEntity route = routeRepository.getActiveRoute(customerId, Status.PROCESSING.toString());
-        return new RouteResponse(RequestStatus.SUCCESS,RouteMapper.mapToRoute(route));
+        return new RouteResponse(RequestStatus.SUCCESS,RouteMapper.toModel(route));
 
     }
 
     public void createRoute(CreateRouteRequest createRouteRequest) {
+        try {
+            ResponseEntity<String> response = aiRequestService.makeRequest(createRouteRequest);
+            if(response.getStatusCode() == HttpStatus.OK) {
+              List<RouteDetail> routeDetailList = RouteMapper.parseRouteDetail(response.getBody());
+              Route routeToBeSave = new Route();
+              routeToBeSave.setRoute(routeDetailList);
+              routeToBeSave.setStatus(Status.CREATED.toString());
+              routeToBeSave.setCustomerId(createRouteRequest.getCustomerId());
+              routeToBeSave.setCreatedAt(new Date());
+              routeRepository.save(RouteMapper.toEntity(routeToBeSave));
+            }
 
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     public RouteResponse updateRouteStatus(Integer routeId, Status status) {
@@ -43,6 +67,11 @@ public class RouteService {
             throw new Error("no route available");
         });
 
-         return new RouteResponse(RequestStatus.SUCCESS,RouteMapper.mapToRoute(route.get()));
+         return new RouteResponse(RequestStatus.SUCCESS,RouteMapper.toModel(route.get()));
+    }
+
+    public ResponseEntity<String> trainModel(TrainModelRequest trainModelRequest) {
+
+        return aiRequestService.trainModel(trainModelRequest);
     }
 }
