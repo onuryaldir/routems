@@ -38,9 +38,9 @@ public class RouteService {
 
     }
 
-    public void createRoute(CreateRouteRequest createRouteRequest) {
+    public Route createRoute(CreateRouteRequest createRouteRequest) {
         try {
-            ResponseEntity<String> response = aiRequestService.makeRequest(createRouteRequest);
+            ResponseEntity<String> response = aiRequestService.predict(createRouteRequest);
             if(response.getStatusCode() == HttpStatus.OK) {
               List<RouteDetail> routeDetailList = RouteMapper.parseRouteDetail(response.getBody());
               Route routeToBeSave = new Route();
@@ -48,12 +48,14 @@ public class RouteService {
               routeToBeSave.setStatus(Status.CREATED.toString());
               routeToBeSave.setCustomerId(createRouteRequest.getCustomerId());
               routeToBeSave.setCreatedAt(new Date());
-              routeRepository.save(RouteMapper.toEntity(routeToBeSave));
+             RouteEntity routeEntity = routeRepository.save(RouteMapper.toEntity(routeToBeSave));
+              return RouteMapper.toModel(routeEntity);
             }
 
         }catch (Exception e){
             throw new RuntimeException(e);
         }
+        return null;
     }
 
     public RouteResponse updateRouteStatus(Integer routeId, Status status) {
