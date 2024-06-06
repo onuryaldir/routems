@@ -2,10 +2,7 @@ package org.development.routems.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.development.routems.model.CreateRouteRequest;
-import org.development.routems.model.RouteResponse;
-import org.development.routems.model.TrainModelRequest;
-import org.development.routems.model.UpdateRouteStatusRequest;
+import org.development.routems.model.*;
 import org.development.routems.service.RouteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +15,11 @@ public class RouteController {
     private final RouteService routeService;
 
     @PostMapping("/create")
-    public void createRoute(@RequestBody @Valid final CreateRouteRequest createRouteRequest) {
+    public Route createRoute(@RequestBody @Valid final CreateRouteRequest createRouteRequest) {
         // Handle the request (e.g., save to database, process the data, etc.)
         // For this example, we'll just return a simple response
 
-        routeService.createRoute(createRouteRequest);
+        return routeService.createRoute(createRouteRequest);
     }
 
     @GetMapping("/get")
