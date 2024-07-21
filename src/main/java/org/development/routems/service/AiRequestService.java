@@ -42,7 +42,7 @@ public class AiRequestService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> requestHttpEntity =  new HttpEntity<>(jsonString,headers);
-        return restTemplate.postForEntity("http://127.0.0.1:5002/predict",requestHttpEntity,String.class);
+        return restTemplate.postForEntity("http://127.0.0.1:5006/predict",requestHttpEntity,String.class);
     }
 
     public ResponseEntity<String> trainModel(TrainModelRequest trainModelRequest) {
@@ -53,6 +53,6 @@ public class AiRequestService {
         String json = String.format("{ \"user_age\": %d, \"user_country_code\": %d,  \"destination_id\": %s, \"user_id\": %d }", trainModelRequest.getUserAge(), trainModelRequest.getUserCountryCode(), "TR34", 1);
 
         HttpEntity<String> requestHttpEntity =  new HttpEntity<>(json,headers);
-        return restTemplate.postForEntity("http://127.0.0.1:5001/train",requestHttpEntity,String.class);
+        return restTemplate.postForEntity("http://127.0.0.1:5005/train",requestHttpEntity,String.class);
     }
 }
