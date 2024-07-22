@@ -1,5 +1,6 @@
 package org.development.routems.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
@@ -37,14 +39,12 @@ public class RouteMapper {
         return route;
     }
 
-    public static List<RouteDetail> parseRouteDetail(String jsonArray) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonArray, new TypeReference<List<RouteDetail>>() {});
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static List<RouteDetail> parseRouteDetail(String jsonArray) throws JsonProcessingException {
+
+        final ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> responseMap = objectMapper.readValue(jsonArray, new TypeReference<Map<String, Object>>() {});
+        List<RouteDetail> routeDetails = objectMapper.convertValue(responseMap.get("predictions"), new TypeReference<List<RouteDetail>>() {});
+        return routeDetails;
     }
     public static RouteEntity toEntity(Route route) {
         if (route == null) {

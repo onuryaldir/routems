@@ -11,7 +11,10 @@ public class RouteDetail {
 
     private double lat;
 
-    @JsonProperty("location_code")
+    @JsonProperty("indicator")
+    private String indicator;
+
+    @JsonProperty("location_id")
     private String locationCode;
 
     @JsonProperty("location_name")
@@ -19,4 +22,5 @@ public class RouteDetail {
 
     @JsonProperty("long")
     private double longitude;
+
 }
