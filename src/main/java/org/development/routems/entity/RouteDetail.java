@@ -29,4 +29,7 @@ public class RouteDetail {
     @JsonProperty("description")
     private String description;
 
+    @JsonProperty("review")
+    private Integer review;
+
 }
