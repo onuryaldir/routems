@@ -23,4 +23,10 @@ public class RouteDetail {
     @JsonProperty("long")
     private double longitude;
 
+    @JsonProperty("definition")
+    private String definition;
+
+    @JsonProperty("description")
+    private String description;
+
 }
