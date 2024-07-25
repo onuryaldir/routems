@@ -32,4 +32,7 @@ public class RouteDetail {
     @JsonProperty("review")
     private Integer review;
 
+    @JsonProperty("region_id")
+    private Integer regionId;
+
 }
